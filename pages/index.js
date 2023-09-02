@@ -35,21 +35,15 @@ const PomodoroTimer = () => {
   const handleReset = () => {
     setIsRunning(false);
     setIsWorking(true);
-    setTimeLeft(workDuration * 60);
+    setWorkDuration(25); // Reset to default work duration
+    setBreakDuration(5); // Reset to default break duration
+    setTimeLeft(25 * 60); // Reset to default work duration
   };
 
-  const handleWorkDurationChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 0 && (value !== 0 || breakDuration !== 0)) {
-      setWorkDuration(value);
-      setTimeLeft(value * 60);
-    }
-  };
-
-  const handleBreakDurationChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 0 && (value !== 0 || workDuration !== 0)) {
-      setBreakDuration(value);
+  const handleSet = () => {
+    // Handle setting custom work and break durations
+    if (!isRunning && workDuration !== 0 && breakDuration !== 0) {
+      setTimeLeft(workDuration * 60);
     }
   };
 
@@ -60,7 +54,7 @@ const PomodoroTimer = () => {
         <input
           type="number"
           value={workDuration}
-          onChange={handleWorkDurationChange}
+          onChange={(e) => setWorkDuration(parseInt(e.target.value))}
           data-testid="work-duration"
           disabled={isRunning}
         />
@@ -70,7 +64,7 @@ const PomodoroTimer = () => {
         <input
           type="number"
           value={breakDuration}
-          onChange={handleBreakDurationChange}
+          onChange={(e) => setBreakDuration(parseInt(e.target.value))}
           data-testid="break-duration"
           disabled={isRunning}
         />
@@ -88,6 +82,9 @@ const PomodoroTimer = () => {
         </button>
         <button onClick={handleReset} data-testid="reset-btn" disabled={isRunning}>
           Reset
+        </button>
+        <button onClick={handleSet} data-testid="set-btn" disabled={isRunning}>
+          Set
         </button>
       </div>
     </div>
