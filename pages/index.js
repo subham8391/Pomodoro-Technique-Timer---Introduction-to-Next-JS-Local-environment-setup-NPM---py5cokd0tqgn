@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 const PomodoroTimer = () => {
-  const [workDuration, setWorkDuration] = useState(25); 
-  const [breakDuration, setBreakDuration] = useState(5); 
+  const [workDuration, setWorkDuration] = useState(25); // Default work duration
+  const [breakDuration, setBreakDuration] = useState(5); // Default break duration
   const [isWorking, setIsWorking] = useState(true);
   const [isRunning, setIsRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(workDuration * 60);
@@ -15,7 +15,7 @@ const PomodoroTimer = () => {
         setTimeLeft(timeLeft - 1);
       }, 1000);
     } else if (timeLeft === 0) {
-     
+      // When the timer reaches 0, switch between work and break
       setIsWorking(!isWorking);
       const newDuration = isWorking ? breakDuration : workDuration;
       setTimeLeft(newDuration * 60);
@@ -40,7 +40,7 @@ const PomodoroTimer = () => {
 
   const handleWorkDurationChange = (e) => {
     const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 0) {
+    if (!isNaN(value) && value >= 0 && (value !== 0 || breakDuration !== 0)) {
       setWorkDuration(value);
       setTimeLeft(value * 60);
     }
@@ -48,7 +48,7 @@ const PomodoroTimer = () => {
 
   const handleBreakDurationChange = (e) => {
     const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 0) {
+    if (!isNaN(value) && value >= 0 && (value !== 0 || workDuration !== 0)) {
       setBreakDuration(value);
     }
   };
@@ -103,4 +103,3 @@ const App = () => {
 };
 
 export default App;
-
