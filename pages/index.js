@@ -40,39 +40,13 @@ const PomodoroTimer = () => {
     setTimeLeft(25 * 60); // Reset to default work duration
   };
 
-  // const handleSet = () => {
-  //   // Handle setting custom work and break durations
-  //   if (!isRunning && (workDuration !== 0 || breakDuration !== 0)) {
-  //     setTimeLeft(workDuration * 60);
-  //   }
-  // };
-const handleSet = () => {
+  const handleSet = () => {
+    // Handle setting custom work and break durations
+    if (!isRunning && (workDuration !== 0 || breakDuration !== 0)) {
+      setTimeLeft(workDuration * 60);
+    }
+  };
 
-// Handle setting custom work and break durations
-
-if (!isRunning && (workDuration !== 0 || breakDuration !== 0)) {
-
-setTimeLeft(workDuration * 60);
-
-} else (workDuration === 0 || breakDuration === 0) {
-
-if(workDuration === 0 && breakDuration === 0) {
-
-setBreakDuration(25);
-
-setWorkDuration(5)
-
-} else {
-
-setBreakDuration(workDuration);
-
-setWorkDuration(workDuration)
-
-}
-
-}
-
-};
   return (
     <div>
       <div>
