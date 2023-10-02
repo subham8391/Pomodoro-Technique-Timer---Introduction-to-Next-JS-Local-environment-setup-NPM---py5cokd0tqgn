@@ -1,129 +1,111 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 
-function App() {
+const PomodoroTimer = () => {
+  const [workDuration, setWorkDuration] = useState(25); // Default work duration
+  const [breakDuration, setBreakDuration] = useState(5); // Default break duration
+  const [isWorking, setIsWorking] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(workDuration * 60);
 
-const [workDuration, setWorkDuration] = useState(25);
+  useEffect(() => {
+    let timer;
 
-const [breakDuration, setBreakDuration] = useState(5);
+    if (isRunning && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      // When the timer reaches 0, switch between work and break
+      setIsWorking(!isWorking);
+      const newDuration = isWorking ? breakDuration : workDuration;
+      setTimeLeft(newDuration * 60);
+    }
 
-const [flag, setFlag] = useState(false);
+    return () => clearInterval(timer);
+  }, [isRunning, timeLeft, isWorking, workDuration, breakDuration]);
 
-const [worksecond, setWorkSecond] = useState(1500);
+  const handleStart = () => {
+    setIsRunning(true);
+  };
 
-const [breaksecond, setBreakSecond] = useState(300);
+  const handleStop = () => {
+    setIsRunning(false);
+  };
 
-const [type, setType] = useState('work');
+  const handleReset = () => {
+    setIsRunning(false);
+    setIsWorking(true);
+    setWorkDuration(25); // Reset to default work duration
+    setBreakDuration(5); // Reset to default break duration
+    setTimeLeft(25 * 60); // Reset to default work duration
+  };
 
-const [resetFlag, setResetFalg] = useState(true);
+  const handleSet = () => {
+    // Handle setting custom work and break durations
+    if (!isRunning && (workDuration !== 0 || breakDuration !== 0)) {
+      setTimeLeft(workDuration * 60);
+    } else if(workDuration === 0 || breakDuration === 0){
+        if(workDuration === 0 && breakDuration === 0){
+          setWorkDuration(25);
+          setBreakDuration(5);
+          
+        }else{
+          setWorkDuration(workDuration);
+          setBreakDuration(workDuration);
+        }
+    }
+  };
 
-useEffect(() => {
-
-if (flag && type === 'work') {
-
-if (worksecond > 0) {
-
-const timer = setTimeout(() => setWorkSecond(worksecond - 1), 1000);
-
-return () => clearTimeout(timer);
-
-}
-
-if (worksecond === 0) {
-
-alert('work duration is over');
-
-setType('break');
-
-setWorkSecond(workDuration * 60);
-
-}
-
-}
-
-if (flag && type === 'break') {
-
-if (breaksecond > 0) {
-
-const timer = setTimeout(() => setBreakSecond(breaksecond - 1), 1000);
-
-return () => clearTimeout(timer);
-
-}
-
-if (breaksecond === 0) {
-
-alert('break duration is over');
-
-setType('work');
-
-setBreakSecond(breakDuration * 60);
-
-}
-
-}
-
-}, [flag, type, worksecond, breaksecond, workDuration, breakDuration]);
-
-const reset = () => {
-
-setResetFalg(true);
-
-setFlag(false);
-
-setType('work');
-
-setWorkDuration(25);
-
-setBreakDuration(5);
-
-setBreakSecond(300);
-
-setWorkSecond(1500);
-
+  return (
+    <div>
+      <div>
+        <label>Work Duration (minutes):</label>
+        <input
+          type="number"
+          value={workDuration}
+          onChange={(e) => setWorkDuration(parseInt(e.target.value))}
+          data-testid="work-duration"
+          disabled={isRunning}
+        />
+      </div>
+      <div>
+        <label>Break Duration (minutes):</label>
+        <input
+          type="number"
+          value={breakDuration}
+          onChange={(e) => setBreakDuration(parseInt(e.target.value))}
+          data-testid="break-duration"
+          disabled={isRunning}
+        />
+      </div>
+      <div>
+        <p>{isWorking ? 'Work Time' : 'Break Time'}</p>
+        <p>{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</p>
+      </div>
+      <div>
+        <button onClick={handleStart} data-testid="start-btn" disabled={isRunning}>
+          Start
+        </button>
+        <button onClick={handleStop} data-testid="stop-btn" disabled={!isRunning}>
+          Stop
+        </button>
+        <button onClick={handleReset} data-testid="reset-btn" disabled={isRunning}>
+          Reset
+        </button>
+        <button onClick={handleSet} data-testid="set-btn" disabled={isRunning}>
+          Set
+        </button>
+      </div>
+    </div>
+  );
 };
 
-const convertToStandardFormat = (sec) => {
-
-let m = parseInt(sec / 60).toString();
-
-let s = parseInt(sec % 60).toString();
-
-if (m.length === 1) m = '0' + m;
-
-if (s.length === 1) s = '0' + s;
-
-return m + ':' + s;
-
+const App = () => {
+  return (
+    <div id='main'>
+      <PomodoroTimer />
+    </div>
+  );
 };
 
-const validateData = (data) => {
-
-if (!isNaN(data) && parseInt(data) >= 0) {
-
-return parseInt(data);
-
-} else return '';
-
-};
-
-const setDuration = (e) => {
-
-e.preventDefault();
-
-if (breakDuration + workDuration <= 0) {
-
-reset();
-
-return;
-
-}
-
-setResetFalg(false);
-
-setType('work');
-
-setWorkSecond(wo
-
-
+export default App;
